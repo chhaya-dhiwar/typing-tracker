@@ -1,0 +1,537 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Speed Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://img.freepik.com/free-photo/keyboard-paper-with-colorful-clips-desktop_23-2147830093.jpg?uid=R176814687&ga=GA1.1.1216652953.1716308943&semt=ais_hybrid') no-repeat center center fixed;
+            background-size: cover;
+            flex-direction: column;
+            color: black;
+        }
+
+        .container {
+            background: linear-gradient(rgba(21, 27, 97, 0.506), rgba(202, 6, 166, 0.511));
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 20px 15px rgba(0, 0, 0, 0.4);
+            width: 80%;
+            max-width: 900px;
+            margin: 80px auto;
+            
+        }
+
+        .settings {
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(rgba(21, 27, 97, 0.506), rgba(202, 6, 166, 0.511));
+            align-items: center;
+            border-radius: 20px;
+            box-shadow: 0 20px 15px rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            margin: 50px auto;
+            width: 80%;
+            max-width: 900px;
+            box-sizing: border-box;
+        }
+
+        .results, .buttons {
+            margin-top: 10px;
+        }
+
+        .results {
+            display: flex;
+            justify-content: space-between;
+        }
+        select {
+            padding: 5px;
+            margin: 10px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            width: 200px;
+            cursor: pointer;
+        } 
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            font-size: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+        }
+
+        .startbtn, button {
+            background-color: white;
+            color: black;
+            cursor: pointer;
+            border: none;
+            border-radius: 15px;
+            padding: 8px 25px;
+            margin: 10px auto;
+            font-size: 16px;
+            text-align: center;
+            display: block;
+            font-weight: bold;
+        }
+
+        button:disabled {
+            background: linear-gradient(rgba(27, 40, 189, 0.824), rgba(241, 4, 197, 0.875));
+            cursor: not-allowed;
+        }
+
+        .test-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #timer {
+            font-size: 16px;
+            font-weight: bold;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+        }
+        #pause-btn{
+            justify-content: center;
+            position: relative;
+        }
+
+        #timer button {
+            margin-left: 10px; /* Position the pause button to the right of the timer */
+        }
+
+        #text-to-type {
+            width: 100%;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 23px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            overflow: hidden;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        #text-to-type span.correct {
+            color: green;
+        }
+
+        #text-to-type span.incorrect {
+            color: red;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        .header {
+            width: 100%;
+            text-shadow: 2px 3px 4px #070707;
+            padding: 1rem;
+            background: linear-gradient(rgba(65, 141, 141, 0.953), rgba(79, 7, 79, 0.936));
+            box-shadow: 0px 20px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between; /* Space between title and buttons */
+            align-items: center;
+        }
+
+        .header h1 {
+            flex: 1; /* Makes the title take full space */
+            text-align: left; /* Aligns the title to the left */
+            color: white;
+        }
+
+        .header .buttons {
+            display: flex;
+            justify-content: flex-end; /* Aligns buttons to the right */
+        }
+
+        .header button {
+            margin-left: 15px; /* Add space between buttons */
+        }
+        
+        .home {
+            background-color: #fbf7f7;
+            color: #0c0c0c;
+            border: none;
+            height: 35px;
+            width: 100px;
+            border-radius: 10px;
+            margin: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+            text-decoration: none; /* Remove underline */
+            display: inline-block; /* Ensure it behaves like a button */
+        }
+
+        .home:hover {
+            background: linear-gradient(rgba(27, 40, 189, 0.824), rgba(241, 4, 197, 0.875));
+        }
+
+        body.dark-mode {
+            background: url('https://img.freepik.com/premium-photo/dark-stylish-workplace-with-laptop-computer-office-supplies-black-lather-desk_67155-2959.jpg?uid=R176814687&ga=GA1.1.1216652953.1716308943&semt=ais_hybrid') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        #darkModeToggle:hover {
+            background: linear-gradient(rgba(27, 40, 189, 0.824), rgba(241, 4, 197, 0.875));
+        }
+        @media (max-width: 600px) {
+            /* For mobile screens */
+            .container {
+            padding: 15px;
+            width: 90%;
+            }
+            .header {
+            padding: 10px;
+            flex-direction: column; /* Stack elements on small screens */
+            text-align: center; /* Center header elements */
+            }
+            select, button {
+            width: 100%; /* Full-width buttons and selects */
+            font-size: 16px;
+            }
+            .home, .startbtn, #reset-btn {
+            padding: 6px;
+            width: 100%;
+            }
+            #wpm, #accuracy {
+            font-size: 14px;
+            padding: 8px;
+            }
+            h1 {
+            font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* For tablets */
+            .container {
+            width: 95%;
+            }
+            .header {
+            padding: 15px;
+            flex-direction: column; /* Stack header items for smaller screens */
+            }
+            select, button {
+            width: 100%;
+            }
+            .home, .startbtn, #reset-btn {
+            font-size: 14px;
+            width: 100px;
+            padding: 8px 12px;
+            }
+            #wpm, #accuracy {
+            font-size: 16px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            /* For larger screens and desktops */
+            .container {
+            width: 70%;
+            }
+            .home, .startbtn, #reset-btn {
+            width: 150px;
+            padding: 10px 20px;
+            }
+            .header {
+            padding: 20px;
+            }
+            select, button {
+            font-size: 18px;
+            }
+            h1 {
+            font-size: 2rem;
+            }
+            #wpm, #accuracy {
+            font-size: 20px;
+            }
+        }
+
+        #wpm, #accuracy {
+            font-size: 20px;
+            font-weight: bold;
+            padding: 8px;
+            background-color: #fbf7f7;
+            border-radius: 5px;
+            color: black;
+        }
+
+        .action-btn {
+            height: 40px;
+            width: 150px;
+            background-color: rgb(54, 118, 118);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+
+        .action-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        #wmp {
+            align-self: flex-start;
+        }
+
+        #accuracy {
+            align-self: flex-end;
+        }
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Rapid Writer</h1>
+        <a href="index.html"><button class="home">Home</button></a>
+        <button class="home" id="darkModeToggle">Dark</button>
+    </header>
+    <div class="settings">
+        <label for="duration">
+        <select id="duration">
+            <option value="1">Select Time Duration</option>
+            <option value="1">1 Minute</option>
+            <option value="2">2 Minutes</option>
+            <option value="3">3 Minutes</option>
+            <option value="5">5 Minutes</option>
+            <option value="10">10 Minutes</option>
+        </select></label>
+        <label for="difficulty">
+        <select id="difficulty">
+            <option value="easy">Select Level</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select></label>
+        <button id="start-btn" class="startbtn">Start</button>
+    </div>
+    <div class="container">
+        <div style="display: inline-flex;">
+            <span id="timer" style="font-size: 26px; margin-bottom: 3px;">⏰ Timer 00:00</span>
+            <span id="pause-btn" style="color: black; font-size: 30px;" disabled>⏸️</span>
+        </div>
+        <div class="test-area">
+            <div id="text-to-type" >
+                The text to type will appear here.
+            </div>
+        </div>
+        <div class="test-area">
+            <textarea id="typing-area" placeholder="Start typing here..." disabled></textarea>
+        </div>
+        <div class="results">
+            <p id="wpm">WPM: 0</p>
+            <p id="accuracy">Accuracy: 0%</p>
+        </div>
+        <div class="buttons">
+            <button id="reset-btn" disabled>Reset</button>
+        </div>
+    </div>
+</body>
+</html>
+
+    <script>
+        // Dark mode toggle functionality.
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const currentMode = document.body.classList.contains('dark-mode') ? 'Light' : 'Dark';
+            darkModeToggle.textContent = currentMode;
+        });
+        const paragraphs = {
+            1: {
+                easy: ["Vendors called out their wares, their voices creating a symphony of sounds that blended into the background hum of the day. Among the crowd, an elderly man in a white kurta made his way through, his steps measured and deliberate, his eyes reflecting the wisdom of many winters. The marketplace, vibrant and alive, seemed to pulse with an energy all its own, each stall a microcosm of life’s simple yet profound exchanges.", "The sun hung low in the December sky, casting elongated shadows across the bustling marketplace of Raipur Tehsil. The air was filled with a melange of scents—spices from distant lands, fresh jasmine flowers, and the unmistakable aroma of street food sizzling on open griddles. Vendors called out their wares, their voices creating a symphony of sounds that blended into the background hum of the day."],
+                medium: ["Aria’s office was on the 23rd floor of a sleek skyscraper that housed 50 different companies. She usually took the elevator with her colleagues, a group of 5 dedicated team members who shared her passion for innovation. Together, they worked on developing new software, aiming to launch their latest project within the next 6 months. During lunch breaks, Aria enjoyed exploring the food court on the 5th floor, where there were 15 different food stalls offering a variety of cuisines, from sushi to spicy Indian curries.", "In the bustling city of Metroville, there lived a young woman named Aria who worked at a tech startup. Every morning, she woke up at 6:30 AM, quickly got ready, and caught the 7:15 AM train to her office, located exactly 12 kilometers away from her apartment. She often marveled at how the train, with its 100 seats and 10 carriages, never failed to arrive on time, even amidst the chaotic city traffic."],
+                hard: ["One of the most ambitious projects was the development of a quantum computer capable of processing 10^6 calculations per second, a feat that would revolutionize industries across the globe. The facility’s mainframe, a towering structure with over 1,024 processors, operated at a temperature of -273.15°C, maintained by a sophisticated cooling system. Security was paramount, with biometric scans (retinal + fingerprint) required for access to the core lab areas.", "The budget for the fiscal year had been set at $75 million, with $25 million allocated specifically for the acquisition of rare materials like superconductors. Each experiment required meticulous planning, often involving complex equations such as E = mc² and Schrödinger’s wave function ψ(x,t). The potential applications of their work ranged from cryptography to drug discovery, promising a future where the impossible became reality."]
+            },
+            2: {
+                easy: ["As the evening approached, the sky transformed into a canvas of oranges and pinks, signaling the close of another day. The hustle and bustle began to wane, replaced by a serene calm that settled over the town. Shopkeepers, with a sense of satisfaction, began to pack up their goods, their faces bathed in the soft glow of the setting sun. Children, their laughter echoing through the narrow lanes, chased each other in playful abandon, savoring the last moments of daylight. In this timeless dance of commerce and camaraderie, Raipur Tehsil revealed its true essence—a place where tradition and modernity coexisted, where every interaction, no matter how mundane, added a brushstroke to the rich tapestry of community life.", "The sun hung low in the December sky, casting elongated shadows across the bustling marketplace of Raipur Tehsil. The air was filled with a melange of scents—spices from distant lands, fresh jasmine flowers, and the unmistakable aroma of street food sizzling on open griddles. Vendors called out their wares, their voices creating a symphony of sounds that blended into the background hum of the day. Among the crowd, an elderly man in a white kurta made his way through, his steps measured and deliberate, his eyes reflecting the wisdom of many winters. The marketplace, vibrant and alive, seemed to pulse with an energy all its own, each stall a microcosm of life’s simple yet profound exchanges."],
+                medium: ["Local artisans displayed their crafts, including 30 hand-painted murals that depicted scenes from the city’s rich history. The festival also supported local charities, raising an impressive 200,000 rupees through donations and auctions. As the night drew to a close, the streets remained alive with laughter and music, a testament to the community’s spirit and the magic of the Festival of Lights. With every lantern lit and every firework launched, Lumina City transformed into a beacon of joy, where the beauty of numbers and the warmth of human connection came together in perfect harmony.", "She often marveled at how the train, with its 100 seats and 10 carriages, never failed to arrive on time, even amidst the chaotic city traffic. Aria’s office was on the 23rd floor of a sleek skyscraper that housed 50 different companies. She usually took the elevator with her colleagues, a group of 5 dedicated team members who shared her passion for innovation. Together, they worked on developing new software, aiming to launch their latest project within the next 6 months. During lunch breaks, Aria enjoyed exploring the food court on the 5th floor, where there were 15 different food stalls offering a variety of cuisines, from sushi to spicy Indian curries. One of her favorite pastimes was counting the number of steps she took each day, aiming to reach her goal of 10,000 steps, which typically included a 3-kilometer walk home after work."],
+                hard: ["In the intricate world of financial markets, the New York Stock Exchange (NYSE) witnessed a volatile day, with the Dow Jones Industrial Average (DJIA) fluctuating between 34,250 and 35,600 points. Traders, utilizing algorithms with nanosecond precision, executed over 2 million trades per minute. One standout performer was the tech giant, XYZ Corporation, whose stock price soared by 15.75%, closing at $1,234.56 per share. The company's quarterly revenue report showed impressive figures, with total earnings of $5.67 billion and net profit margins of 18.3%.", "The summit also featured hackathons, where participants had 48 hours to solve real-world problems, with winning teams receiving lucrative job offers and cash rewards. Amidst the flurry of activity, the summit's eco-friendly initiatives stood out, with 100% renewable energy powering the event and recycling bins placed at every corner. By the end of the summit, NeoCity had not only showcased the forefront of technological innovation but had also reinforced its status as a hub of creativity and forward-thinking."]
+            },
+            3: {
+                easy: ["The sun hung low in the December sky, casting elongated shadows across the bustling marketplace of Raipur Tehsil. The air was filled with a melange of scents—spices from distant lands, fresh jasmine flowers, and the unmistakable aroma of street food sizzling on open griddles. Vendors called out their wares, their voices creating a symphony of sounds that blended into the background hum of the day. Among the crowd, an elderly man in a white kurta made his way through, his steps measured and deliberate, his eyes reflecting the wisdom of many winters. The marketplace, vibrant and alive, seemed to pulse with an energy all its own, each stall a microcosm of life’s simple yet profound exchanges.", "As the evening approached, the sky transformed into a canvas of oranges and pinks, signaling the close of another day. The hustle and bustle began to wane, replaced by a serene calm that settled over the town. Shopkeepers, with a sense of satisfaction, began to pack up their goods, their faces bathed in the soft glow of the setting sun. Children, their laughter echoing through the narrow lanes, chased each other in playful abandon, savoring the last moments of daylight. In this timeless dance of commerce and camaraderie, Raipur Tehsil revealed its true essence—a place where tradition and modernity coexisted, where every interaction, no matter how mundane, added a brushstroke to the rich tapestry of community life."],
+                medium: ["In the heart of Lumina City, a grand festival was held every year on the 15th of November, attracting thousands of visitors from near and far. The event, known as the Festival of Lights, featured 200 colorful lanterns that adorned the streets, creating a mesmerizing glow that could be seen from miles away. Stalls lined the main avenue, each offering unique goods and delicacies, with over 50 different types of sweets and 25 varieties of street food. At precisely 7:00 PM, a spectacular fireworks display lit up the sky, with bursts of colors forming intricate patterns that left the crowd in awe.", "During lunch breaks, Aria enjoyed exploring the food court on the 5th floor, where there were 15 different food stalls offering a variety of cuisines, from sushi to spicy Indian curries. One of her favorite pastimes was counting the number of steps she took each day, aiming to reach her goal of 10,000 steps, which typically included a 3-kilometer walk home after work. In the evenings, Aria often attended yoga classes, which lasted for 60 minutes, or spent 30 minutes reading her favorite mystery novels. On weekends, she loved to visit her parents, who lived in a quaint village 80 kilometers away, a journey she made by bus, which took approximately 2 hours. Despite her busy schedule, Aria managed to balance work, leisure, and family time, ensuring she dedicated at least 7 hours every night to restful sleep. The city's vibrant energy, combined with her disciplined routine, made every day an exciting new adventure, filled with numbers and moments that added up to a fulfilling life."],
+                hard: ["The opening ceremony was a spectacle, with a 3D holographic display that projected futuristic cityscapes, accompanied by an AI-generated symphony. Networking events were scheduled every evening at 7 PM, providing opportunities to connect with industry leaders and potential collaborators. One of the highlights was the startup pitch competition, where 20 innovative startups competed for a grand prize of $1 million in funding. The summit also featured hackathons, where participants had 48 hours to solve real-world problems, with winning teams receiving lucrative job offers and cash rewards.", "The facility’s mainframe, a towering structure with over 1,024 processors, operated at a temperature of -273.15°C, maintained by a sophisticated cooling system. Security was paramount, with biometric scans (retinal + fingerprint) required for access to the core lab areas. The budget for the fiscal year had been set at $75 million, with $25 million allocated specifically for the acquisition of rare materials like superconductors. Each experiment required meticulous planning, often involving complex equations such as E = mc² and Schrödinger’s wave function ψ(x,t). The potential applications of their work ranged from cryptography to drug discovery, promising a future where the impossible became reality."]
+            },
+            5: {
+                easy: ["The sun hung low in the December sky, casting elongated shadows across the bustling marketplace of Raipur Tehsil. The air was filled with a melange of scents—spices from distant lands, fresh jasmine flowers, and the unmistakable aroma of street food sizzling on open griddles. Vendors called out their wares, their voices creating a symphony of sounds that blended into the background hum of the day. Among the crowd, an elderly man in a white kurta made his way through, his steps measured and deliberate, his eyes reflecting the wisdom of many winters. The marketplace, vibrant and alive, seemed to pulse with an energy all its own, each stall a microcosm of life’s simple yet profound exchanges. As the evening approached, the sky transformed into a canvas of oranges and pinks, signaling the close of another day. The hustle and bustle began to wane, replaced by a serene calm that settled over the town. Shopkeepers, with a sense of satisfaction, began to pack up their goods, their faces bathed in the soft glow of the setting sun.", "Among the crowd, an elderly man in a white kurta made his way through, his steps measured and deliberate, his eyes reflecting the wisdom of many winters. The marketplace, vibrant and alive, seemed to pulse with an energy all its own, each stall a microcosm of life’s simple yet profound exchanges. As the evening approached, the sky transformed into a canvas of oranges and pinks, signaling the close of another day. The hustle and bustle began to wane, replaced by a serene calm that settled over the town. Shopkeepers, with a sense of satisfaction, began to pack up their goods, their faces bathed in the soft glow of the setting sun. Children, their laughter echoing through the narrow lanes, chased each other in playful abandon, savoring the last moments of daylight. In this timeless dance of commerce and camaraderie, Raipur Tehsil revealed its true essence—a place where tradition and modernity coexisted, where every interaction, no matter how mundane, added a brushstroke to the rich tapestry of community life."],
+                medium: ["The festival also included a series of performances, ranging from traditional dances to modern acrobatics, with a lineup of 10 different acts scheduled throughout the evening. Families gathered to enjoy the festivities, children eagerly participating in various games and activities, each hoping to win one of the 100 prizes up for grabs. The central stage, located in the town square, hosted a grand concert featuring 5 popular bands, with each set lasting 45 minutes. Food vendors reported selling approximately 1,500 servings of their most popular dish, a spicy noodle soup, by the end of the night. Local artisans displayed their crafts, including 30 hand-painted murals that depicted scenes from the city’s rich history. The festival also supported local charities, raising an impressive 200,000 rupees through donations and auctions. As the night drew to a close, the streets remained alive with laughter and music, a testament to the community’s spirit and the magic of the Festival of Lights. With every lantern lit and every firework launched, Lumina City transformed into a beacon of joy, where the beauty of numbers and the warmth of human connection came together in perfect harmony.", "She usually took the elevator with her colleagues, a group of 5 dedicated team members who shared her passion for innovation. Together, they worked on developing new software, aiming to launch their latest project within the next 6 months. During lunch breaks, Aria enjoyed exploring the food court on the 5th floor, where there were 15 different food stalls offering a variety of cuisines, from sushi to spicy Indian curries. One of her favorite pastimes was counting the number of steps she took each day, aiming to reach her goal of 10,000 steps, which typically included a 3-kilometer walk home after work. In the evenings, Aria often attended yoga classes, which lasted for 60 minutes, or spent 30 minutes reading her favorite mystery novels. On weekends, she loved to visit her parents, who lived in a quaint village 80 kilometers away, a journey she made by bus, which took approximately 2 hours. Despite her busy schedule, Aria managed to balance work, leisure, and family time, ensuring she dedicated at least 7 hours every night to restful sleep. The city's vibrant energy, combined with her disciplined routine, made every day an exciting new adventure, filled with numbers and moments that added up to a fulfilling life."],
+                hard: ["In the expansive universe of Astrobiologica, scientists were on the brink of discovering a new exoplanet, designated XZ-2048. This celestial body, located approximately 13.7 billion light-years away, exhibited unique properties that defied existing astronomical theories. The planet's mass was calculated to be 4.8×10^24 kilograms, orbiting a star that emitted 1.2×10^30 watts of energy. Researchers equipped with advanced telescopes, operating at a resolution of 0.05 arcseconds, observed XZ-2048's orbit, which had an eccentricity of 0.37 and a semi-major axis of 5.9 AU (astronomical units). The surface temperature was estimated to be -150°C, with atmospheric pressure measured at 101.3 kPa. Spectroscopic analysis revealed traces of rare elements, such as osmium (Os) and iridium (Ir), with isotopic ratios of 1:2.5 and 1:3.6, respectively.", "The opening ceremony was a spectacle, with a 3D holographic display that projected futuristic cityscapes, accompanied by an AI-generated symphony. Networking events were scheduled every evening at 7 PM, providing opportunities to connect with industry leaders and potential collaborators. One of the highlights was the startup pitch competition, where 20 innovative startups competed for a grand prize of $1 million in funding. The summit also featured hackathons, where participants had 48 hours to solve real-world problems, with winning teams receiving lucrative job offers and cash rewards. Amidst the flurry of activity, the summit's eco-friendly initiatives stood out, with 100% renewable energy powering the event and recycling bins placed at every corner."]
+            },
+            10: {
+                easy: ["In the heart of a dense forest, an ancient tree stood tall, its gnarled branches stretching towards the sky. This tree, known as the Whispering Oak, had been a silent witness to countless seasons and stories of the forest inhabitants. Birds of all colors nested in its branches, their songs weaving through the air like threads in a tapestry. The forest floor beneath was a carpet of fallen leaves, moss, and tiny flowers that bloomed in the filtered sunlight. This sanctuary of life and tranquility was a testament to nature's resilience and beauty, providing shelter and nourishment to every creature that called it home.The early morning sun cast a golden hue over the serene waters of a small coastal village. Fishermen prepared their boats for the day's journey, their silhouettes etched against the horizon. The sound of waves gently lapping against the shore created a soothing melody, harmonizing with the calls of seagulls overhead. As the village began to stir, the aroma of freshly baked bread wafted through the air, mingling with the salty sea breeze. This idyllic scene was a daily reminder of the simple joys of life by the sea, where each day began with promise and the unspoken bond between the villagers and the ocean.", "The sun hung low in the December sky, casting elongated shadows across the bustling marketplace of Raipur Tehsil. The air was filled with a melange of scents—spices from distant lands, fresh jasmine flowers, and the unmistakable aroma of street food sizzling on open griddles. Vendors called out their wares, their voices creating a symphony of sounds that blended into the background hum of the day. Among the crowd, an elderly man in a white kurta made his way through, his steps measured and deliberate, his eyes reflecting the wisdom of many winters. The marketplace, vibrant and alive, seemed to pulse with an energy all its own, each stall a microcosm of life’s simple yet profound exchanges. As the evening approached, the sky transformed into a canvas of oranges and pinks, signaling the close of another day. The hustle and bustle began to wane, replaced by a serene calm that settled over the town. Shopkeepers, with a sense of satisfaction, began to pack up their goods, their faces bathed in the soft glow of the setting sun. Children, their laughter echoing through the narrow lanes, chased each other in playful abandon, savoring the last moments of daylight. In this timeless dance of commerce and camaraderie, Raipur Tehsil revealed its true essence—a place where tradition and modernity coexisted, where every interaction, no matter how mundane, added a brushstroke to the rich tapestry of community life."],
+                medium: ["Stalls lined the main avenue, each offering unique goods and delicacies, with over 50 different types of sweets and 25 varieties of street food. At precisely 7:00 PM, a spectacular fireworks display lit up the sky, with bursts of colors forming intricate patterns that left the crowd in awe. The festival also included a series of performances, ranging from traditional dances to modern acrobatics, with a lineup of 10 different acts scheduled throughout the evening. Families gathered to enjoy the festivities, children eagerly participating in various games and activities, each hoping to win one of the 100 prizes up for grabs. The central stage, located in the town square, hosted a grand concert featuring 5 popular bands, with each set lasting 45 minutes. Food vendors reported selling approximately 1,500 servings of their most popular dish, a spicy noodle soup, by the end of the night. Local artisans displayed their crafts, including 30 hand-painted murals that depicted scenes from the city’s rich history. The festival also supported local charities, raising an impressive 200,000 rupees through donations and auctions. As the night drew to a close, the streets remained alive with laughter and music, a testament to the community’s spirit and the magic of the Festival of Lights. With every lantern lit and every firework launched, Lumina City transformed into a beacon of joy, where the beauty of numbers and the warmth of human connection came together in perfect harmony.", "She often marveled at how the train, with its 100 seats and 10 carriages, never failed to arrive on time, even amidst the chaotic city traffic. Aria’s office was on the 23rd floor of a sleek skyscraper that housed 50 different companies. She usually took the elevator with her colleagues, a group of 5 dedicated team members who shared her passion for innovation. Together, they worked on developing new software, aiming to launch their latest project within the next 6 months. During lunch breaks, Aria enjoyed exploring the food court on the 5th floor, where there were 15 different food stalls offering a variety of cuisines, from sushi to spicy Indian curries. One of her favorite pastimes was counting the number of steps she took each day, aiming to reach her goal of 10,000 steps, which typically included a 3-kilometer walk home after work. In the evenings, Aria often attended yoga classes, which lasted for 60 minutes, or spent 30 minutes reading her favorite mystery novels. On weekends, she loved to visit her parents, who lived in a quaint village 80 kilometers away, a journey she made by bus, which took approximately 2 hours. Despite her busy schedule, Aria managed to balance work, leisure, and family time, ensuring she dedicated at least 7 hours every night to restful sleep. The city's vibrant energy, combined with her disciplined routine, made every day an exciting new adventure, filled with numbers and moments that added up to a fulfilling life."],
+                hard: ["Keynote speakers included luminaries from Fortune 500 companies, with presentations that delved into AI, IoT, and blockchain. Attendees navigated through 12 themed zones, each dedicated to a specific field, such as autonomous vehicles, 5G, and smart cities. The opening ceremony was a spectacle, with a 3D holographic display that projected futuristic cityscapes, accompanied by an AI-generated symphony. Networking events were scheduled every evening at 7 PM, providing opportunities to connect with industry leaders and potential collaborators. One of the highlights was the startup pitch competition, where 20 innovative startups competed for a grand prize of $1 million in funding. The summit also featured hackathons, where participants had 48 hours to solve real-world problems, with winning teams receiving lucrative job offers and cash rewards. Amidst the flurry of activity, the summit's eco-friendly initiatives stood out, with 100% renewable energy powering the event and recycling bins placed at every corner. By the end of the summit, NeoCity had not only showcased the forefront of technological innovation but had also reinforced its status as a hub of creativity and forward-thinking.", "The facility boasted an impressive array of 128 qubits, each one crucial for the groundbreaking quantum computations being conducted. Researchers, working in teams of 5 to 7 members, delved into experiments that challenged the boundaries of known science. One of the most ambitious projects was the development of a quantum computer capable of processing 10^6 calculations per second, a feat that would revolutionize industries across the globe. The facility’s mainframe, a towering structure with over 1,024 processors, operated at a temperature of -273.15°C, maintained by a sophisticated cooling system. Security was paramount, with biometric scans (retinal + fingerprint) required for access to the core lab areas. The budget for the fiscal year had been set at $75 million, with $25 million allocated specifically for the acquisition of rare materials like superconductors. Each experiment required meticulous planning, often involving complex equations such as E = mc² and Schrödinger’s wave function ψ(x,t). The potential applications of their work ranged from cryptography to drug discovery, promising a future where the impossible became reality."]
+            }
+        };
+
+        const durationSelect = document.getElementById("duration");
+        const difficultySelect = document.getElementById("difficulty");
+        const startButton = document.getElementById("start-btn");
+        const pauseButton = document.getElementById("pause-btn");
+        const resetButton = document.getElementById("reset-btn");
+        const textToType = document.getElementById("text-to-type");
+        const typingArea = document.getElementById("typing-area");
+        const timerDisplay = document.getElementById("timer");
+        const wpmDisplay = document.getElementById("wpm");
+        const accuracyDisplay = document.getElementById("accuracy");
+
+        let timer, timeLeft, totalTyped, correctChars, testStarted, paused;
+
+        function getRandomParagraph() {
+            const duration = parseInt(durationSelect.value);
+            const difficulty = difficultySelect.value;
+            const levelParagraphs = paragraphs[duration][difficulty];
+            const randomIndex = Math.floor(Math.random() * levelParagraphs.length);
+            return levelParagraphs[randomIndex];
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `⏰ Timer ${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+        }
+        let startTime;
+
+function startTest() {
+    const selectedParagraph = getRandomParagraph();
+    textToType.textContent = selectedParagraph;
+    typingArea.value = "";
+    typingArea.disabled = false;
+    typingArea.focus();
+    timeLeft = parseInt(durationSelect.value) * 60;
+    totalTyped = 0;
+    correctChars = 0;
+    testStarted = false;
+    paused = false;
+    startButton.disabled = true;
+    pauseButton.disabled = false;
+    resetButton.disabled = false;
+    pauseButton.textContent = "⏸️";
+
+    typingArea.addEventListener("input", handleTyping);
+}
+
+        function handleTyping() {
+            if (!testStarted) {
+                testStarted = true;
+                startTimer();
+            }
+
+            const typedText = typingArea.value;
+            const originalText = textToType.textContent.replace(/\n/g, "");
+            let formattedText = "";
+
+            totalTyped = typedText.length;
+            correctChars = 0;
+
+            for (let i = 0; i < originalText.length; i++) {
+                if (typedText[i] === originalText[i]) {
+                    formattedText += `<span class="correct">${originalText[i]}</span>`;
+                    correctChars++;
+                } else if (typedText[i]) {
+                    formattedText += `<span class="incorrect">${originalText[i]}</span>`;
+                } else {
+                    formattedText += originalText[i];
+                }
+            }
+            textToType.innerHTML = formattedText;
+            calculateWPMAndAccuracy();
+        }
+
+        function startTimer() {
+    startTime = new Date();
+    timer = setInterval(() => {
+        if (!paused) {
+            timeLeft--;
+            updateTimerDisplay();
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                endTest();
+            }
+        }
+    }, 1000);
+}
+
+        function calculateWPMAndAccuracy() {
+    const elapsedTime = (new Date() - startTime) / 1000 / 60; // elapsed time in minutes
+    const wordsTyped = totalTyped / 5;
+    const wpm = Math.round(wordsTyped / elapsedTime);
+    const accuracy = totalTyped > 0 ? Math.round((correctChars / totalTyped) * 100) : 0;
+
+    wpmDisplay.textContent = `WPM: ${wpm}`;
+    accuracyDisplay.textContent = `Accuracy: ${accuracy}%`;
+}
+        function togglePauseResume() {
+            if (paused) {
+                paused = false;
+                typingArea.disabled = false;
+                pauseButton.textContent = "⏸️";
+                typingArea.focus();
+            } else {
+                paused = true;
+                typingArea.disabled = true;
+                pauseButton.textContent = "▶️";
+            }
+        }
+
+        function resetTest() {
+            clearInterval(timer);
+            textToType.textContent = "The text to type will appear here.";
+            typingArea.value = "";
+            typingArea.disabled = true;
+            timerDisplay.textContent = "⏰ Timer 00:00";
+            wpmDisplay.textContent = "WPM: 0";
+            accuracyDisplay.textContent = "Accuracy: 0%";
+            startButton.disabled = false;
+            pauseButton.disabled = true;
+            resetButton.disabled = true;
+            pauseButton.textContent = "⏸️";
+        }
+
+        function endTest() {
+            typingArea.disabled = true;
+            startButton.disabled = false;
+            pauseButton.disabled = true;
+            resetButton.disabled = false;
+        }
+
+        startButton.addEventListener("click", startTest);
+        pauseButton.addEventListener("click", togglePauseResume);
+        resetButton.addEventListener("click", resetTest);
+    </script>
+</body>
+</html>

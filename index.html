@@ -1,0 +1,144 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typing Speed Tracker</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: url('https://img.freepik.com/free-photo/keyboard-paper-with-colorful-clips-desktop_23-2147830093.jpg?uid=R176814687&ga=GA1.1.1216652953.1716308943&semt=ais_hybrid') no-repeat center center fixed;
+        background-size: cover;
+        color: black;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      background: url('https://img.freepik.com/premium-photo/dark-stylish-workplace-with-laptop-computer-office-supplies-black-lather-desk_67155-2959.jpg?uid=R176814687&ga=GA1.1.1216652953.1716308943&semt=ais_hybrid') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+    }
+
+    
+      .header {
+      display: flex;
+      justify-content: space-between;
+      background: linear-gradient(rgba(65, 141, 141, 0.953), rgba(79, 7, 79, 0.936));
+      padding: 1rem;
+      box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
+    }
+    #darkModeToggle {
+      background-color: #fbf7f7;
+      color: #0c0c0c;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s;
+      padding: 10px;
+      width: 100px;
+      height: 40px;
+    }
+
+    #darkModeToggle:hover {
+      background: linear-gradient(rgba(27, 40, 189, 0.824), rgba(241, 4, 197, 0.875));
+    }
+
+    .setting {
+      background: linear-gradient(rgba(21, 27, 97, 0.506), rgba(202, 6, 166, 0.511));
+       width: 100%;
+       max-width: 900px;
+      text-align: center;
+      margin: 100px auto;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 2rem;
+    }
+    header h1 {
+      color: white;
+    }
+    
+
+    button {
+      padding: 15px;
+      width: 150px;
+      background-color: #fbf7f7;
+      color: #0c0c0c;
+      border: none;
+      border-radius: 25px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: linear-gradient(rgba(27, 40, 189, 0.824), rgba(241, 4, 197, 0.875));
+    }
+
+    img {
+      margin: 20px auto;
+      width: 100%;
+      max-width: 600px;
+      border-radius: 15px;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      .setting {
+        width: 100%;
+        padding: 20px;
+      }
+
+      button {
+        width: 120px;
+        font-size: 14px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>Rapid Writer</h1>
+    <button id="darkModeToggle">Dark</button>
+  </header>
+
+  <main>
+    <div class="setting">
+      <h1>Welcome to the Typing Speed Tracker</h1>
+      <img src="https://media.istockphoto.com/id/2100970016/photo/closeup-image-of-a-woman-typing-on-laptop-computer-keyboard.jpg?s=612x612&w=0&k=20&c=I9Togs-5CdhuZUlzEhW_qoiXeWEM_1oKdxVWagE_xQU=" alt="Typing illustration"><br><br>
+      <a href="index2.html"><button>Own Text</button></a>
+      <a href="index3.html"><button>Custom Text</button></a>
+    </div>
+  </main>
+
+  <script>
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    darkModeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const currentMode = document.body.classList.contains('dark-mode') ? 'Light' : 'Dark';
+      darkModeToggle.textContent = currentMode;
+    });
+  </script>
+</body>
+</html>
